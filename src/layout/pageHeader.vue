@@ -1,7 +1,7 @@
 <template>
     <div id="fullPageHeader">
         <!-- section1, button here, click and ask for current location -->
-        <div id="section1">Button for location here
+        <div id="section1">Button for location here1
             <button @click="getCurrentLocation">Get your current location</button>
             <div v-if="currentLocation.length > 0">{{ currentLocation }}</div>
         </div>
