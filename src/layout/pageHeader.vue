@@ -46,7 +46,7 @@ export default {
         },
 
         searchLocation() {
-            const apiKey = 'AIzaSyDRVI_zAjaardkVaUlZDmHb6YY_fL_x_UU';
+            const apiKey = '';
             const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(this.searchQuery)}&key=${apiKey}`;
 
             fetch(url)
