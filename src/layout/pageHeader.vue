@@ -72,11 +72,18 @@ export default {
             this.map = map;
         },
         addMarker(lat, lng) {
+            console.log(`Adding marker at lat: ${lat}, lng: ${lng}`); // Debug output
             const marker = new google.maps.Marker({
                 position: { lat, lng },
                 map: this.map,
             });
-            this.markers.push(marker);
+            if (marker) {
+                console.log('Marker created successfully', marker);
+                this.markers.push(marker);
+                console.log('Marker pushed to markers array', this.markers);
+            } else {
+                console.error('Failed to create marker');
+            }
         },
         loadMapScript() {
             const script = document.createElement('script');
