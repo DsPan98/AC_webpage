@@ -24,7 +24,7 @@
 export default {
     name: 'Homepage',
     mounted() {
-        this.loadMapScript();
+        //this.loadMapScript();
     },
     methods: {
         getCurrentLocation() {
@@ -52,15 +52,23 @@ export default {
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
+                    //console.log('Data received in searchLocation:', data);
+                    //console.log('Mock fetch data:', JSON.stringify(data, null, 2));
+
                     if (data.status === 'OK' && data.results.length > 0) {
                         const location = data.results[0].geometry.location;
+                        console.log('location within data:', location);
                         this.addMarker(location.lat, location.lng);
                         this.map.setCenter(location);
+                        console.log('the markers array size after push is within fetch:', this.markers.length)
+
                     } else {
                         console.error('No results found');
                     }
                 })
                 .catch(error => console.error('Error:', error));
+                console.log('the markers array size after push is:', this.markers.length)
+
         },
 
         initMap() {
@@ -78,9 +86,13 @@ export default {
                 map: this.map,
             });
             if (marker) {
-                console.log('Marker created successfully', marker);
+                //console.log('Marker created successfully', marker);
                 this.markers.push(marker);
+                /*
+                console.log('the markers array size after push is:', this.markers.length)
                 console.log('Marker pushed to markers array', this.markers);
+                console.log('Markers being pushed to array, first element would be:', this.markers[0].position)
+                */
             } else {
                 console.error('Failed to create marker');
             }
