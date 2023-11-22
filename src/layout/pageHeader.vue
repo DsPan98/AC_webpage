@@ -1,7 +1,7 @@
 <template>
     <div id="fullPageHeader">
         <!-- section1, button here, click and ask for current location -->
-        <div id="section1">Button for location here1
+        <div id="section1">Button for location here
             <button @click="getCurrentLocation">Get your current location</button>
             <div v-if="currentLocation.length > 0">{{ currentLocation }}</div>
         </div>
@@ -15,7 +15,14 @@
             <div id="map" style="height:300px"></div>
         </div>
         <!-- section4 table here, with all the searched places -->
-        <div id="section4">Table here</div>
+        <div id="section4">Table here
+            <button></button>
+            <!-- <v-data-table :headers="headers" :items="places" :items-per-page="10" item-key="id" show-select
+                v-model="selected"></v-data-table> -->
+            <v-data-table :headers="headers" :items="tableMarkers" :items-per-page="10" show-select
+                v-model="selected"></v-data-table>
+
+        </div>
         <!-- section5 time zone here -->
         <div id="section5">Timezone and local time here</div>
     </div>
@@ -24,7 +31,7 @@
 export default {
     name: 'Homepage',
     mounted() {
-        //this.loadMapScript();
+        this.loadMapScript();
     },
     methods: {
         getCurrentLocation() {
@@ -46,29 +53,35 @@ export default {
         },
 
         searchLocation() {
-            const apiKey = '';
-            const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(this.searchQuery)}&key=${apiKey}`;
+            return new Promise((resolve, reject) => {
 
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    //console.log('Data received in searchLocation:', data);
-                    //console.log('Mock fetch data:', JSON.stringify(data, null, 2));
+                const apiKey = 'AIzaSyDRVI_zAjaardkVaUlZDmHb6YY_fL_x_UU';
+                const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(this.searchQuery)}&key=${apiKey}`;
 
-                    if (data.status === 'OK' && data.results.length > 0) {
-                        const location = data.results[0].geometry.location;
-                        console.log('location within data:', location);
-                        this.addMarker(location.lat, location.lng);
-                        this.map.setCenter(location);
-                        console.log('the markers array size after push is within fetch:', this.markers.length)
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        //console.log('Data received in searchLocation:', data);
+                        //console.log('Mock fetch data:', JSON.stringify(data, null, 2));
 
-                    } else {
-                        console.error('No results found');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-                console.log('the markers array size after push is:', this.markers.length)
+                        if (data.status === 'OK' && data.results.length > 0) {
+                            const location = data.results[0].geometry.location;
+                            //console.log('location within data:', location);
+                            this.addMarker(location.lat, location.lng);
+                            this.map.setCenter(location);
+                            resolve();
+                            //console.log('the markers array size after push is within fetch:', this.markers.length)
 
+                        } else {
+                            console.error('No results found');
+                            reject(new Error('No results found'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        reject(error);
+                    });
+            });
         },
 
         initMap() {
@@ -105,7 +118,24 @@ export default {
             window.initMap = this.initMap.bind(this);
             document.head.appendChild(script);
         },
+        tableDelete() {
+            this.places = this.places.filter(place => !this.selected.includes(place.id));
+            this.selected = [];
+
+
+        }
     },
+    computed: {
+        tableMarkers() {
+            return this.markers.map(marker => {
+                return {
+                    lat: marker.position.lat(),
+                    lng: marker.position.lng()
+                };
+            });
+        }
+    },
+
 
     data() {
         return {
@@ -113,6 +143,18 @@ export default {
             map: null,
             markers: [],
             searchQuery: '',
+
+            headers: [
+                { text: 'Latitude', value: 'lat' },
+                { text: 'Longitude', value: 'lng' }
+            ],
+            // headers: [
+            //     { text: 'Name', value: 'name' },
+            //     { text: 'Address', value: 'address' },
+            //     { text: 'Coordinates', value: 'coords' },
+            // ],
+            selected: [],
+            places: [],
         };
     }
 }

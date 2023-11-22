@@ -60,7 +60,6 @@ describe('PageHeader', () => {
         wrapper.vm.searchQuery = 'Some Address';
 
         await wrapper.vm.searchLocation();
-        await Vue.nextTick();
 
         // Check if markers were added as expected
         expect(wrapper.vm.markers.length).toBeGreaterThan(0);

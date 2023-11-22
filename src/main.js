@@ -17,6 +17,11 @@ import '@/assets/main.css';
 
 import { register } from 'swiper/element/bundle';
 register();
+import Vuetify from 'vuetify';
+import 'vuetify/dist/vuetify.min.css'; 
+
+Vue.use(Vuetify);
+const vuetify = new Vuetify({});
 
 
 ///testing here
@@ -39,6 +44,7 @@ Vue.use(ElementUI, {
 
 
 new Vue({
+  vuetify,
   router,
   //  store,
   i18n,
