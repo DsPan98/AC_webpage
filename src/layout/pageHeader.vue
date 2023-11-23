@@ -16,11 +16,11 @@
         </div>
         <!-- section4 table here, with all the searched places -->
         <div id="section4">Table here
-            <button></button>
-            <!-- <v-data-table :headers="headers" :items="places" :items-per-page="10" item-key="id" show-select
-                v-model="selected"></v-data-table> -->
-            <v-data-table :headers="headers" :items="tableMarkers" :items-per-page="10" show-select
+            <button @click="deleteSelected">button for deletion</button>
+            <v-data-table :headers="headers" :items="places" :items-per-page="10" item-key="id" show-select
                 v-model="selected"></v-data-table>
+            <!-- <v-data-table :headers="headers" :items="tableMarkers" :items-per-page="10" show-select
+                v-model="selected"></v-data-table> -->
 
         </div>
         <!-- section5 time zone here -->
@@ -66,8 +66,11 @@ export default {
 
                         if (data.status === 'OK' && data.results.length > 0) {
                             const location = data.results[0].geometry.location;
+                            const searchQuery = this.searchQuery;
+                            const address = data.results[0].formatted_address;
                             //console.log('location within data:', location);
                             this.addMarker(location.lat, location.lng);
+                            this.addPlace(this.markers[this.markers.length - 1], name, address);
                             this.map.setCenter(location);
                             resolve();
                             //console.log('the markers array size after push is within fetch:', this.markers.length)
@@ -106,6 +109,8 @@ export default {
                 console.log('Marker pushed to markers array', this.markers);
                 console.log('Markers being pushed to array, first element would be:', this.markers[0].position)
                 */
+                //add coord to places as well
+
             } else {
                 console.error('Failed to create marker');
             }
@@ -118,12 +123,27 @@ export default {
             window.initMap = this.initMap.bind(this);
             document.head.appendChild(script);
         },
-        tableDelete() {
+        deleteSelected() {
             this.places = this.places.filter(place => !this.selected.includes(place.id));
             this.selected = [];
+        },
+        addPlace(marker, searchQuery, address) {
+            const newPlace = {
+                id: this.generateUniqueId(),
+                name:this.searchQuery,
+                address:address,
+                coords: `${marker.position.lat()}, ${marker.position.lng()}`,
 
+            };
 
-        }
+            this.places.push(newPlace);
+        },
+
+        //helper function, generating unique id for places array
+        generateUniqueId() {
+            //random generating
+            return Date.now() + Math.random().toString(36).substring(2, 9);
+        },
     },
     computed: {
         tableMarkers() {
@@ -144,15 +164,16 @@ export default {
             markers: [],
             searchQuery: '',
 
-            headers: [
-                { text: 'Latitude', value: 'lat' },
-                { text: 'Longitude', value: 'lng' }
-            ],
             // headers: [
-            //     { text: 'Name', value: 'name' },
-            //     { text: 'Address', value: 'address' },
-            //     { text: 'Coordinates', value: 'coords' },
+            //     { text: 'Latitude', value: 'lat' },
+            //     { text: 'Longitude', value: 'lng' },
+            //     { text: 'select', value: 'data-table-select' },
             // ],
+            headers: [
+                { text: 'Name', value: 'name' },
+                { text: 'Address', value: 'address' },
+                { text: 'Coordinates', value: 'coords' },
+            ],
             selected: [],
             places: [],
         };
@@ -164,11 +185,25 @@ export default {
 #fullPageHeader {
     border: 2px solid red;
     width: 100vw;
-    height: 500px;
+    height: 1500px;
     display: flex;
     flex-grow: 1;
     flex-direction: column;
     justify-content: flex-start;
     margin: auto;
+}
+
+
+.v-data-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+
+.v-data-table th,
+.v-data-table td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
 }
 </style>
