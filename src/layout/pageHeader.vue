@@ -32,6 +32,7 @@ export default {
     name: 'Homepage',
     mounted() {
         this.loadMapScript();
+        this.loadTestItems();
     },
     methods: {
         getCurrentLocation() {
@@ -44,7 +45,10 @@ export default {
         },
         showPosition(position) {
             alert("Latitude: " + position.coords.latitude + "\nLongitude: " + position.coords.longitude);
-            this.currentLocation = [position.coords.latitude, position.coords.longitude];
+            // this.currentLocation = [position.coords.latitude, position.coords.longitude];
+            // this.addMarker(position.coords.latitude, position.coords.longitude);
+            // this.addPlace(this.markers[this.markers.length - 1], 'Current Location', 'test address');
+            this.showAddress(position.coords.latitude, position.coords.longitude);
 
         },
         showError(error) {
@@ -54,9 +58,7 @@ export default {
 
         searchLocation() {
             return new Promise((resolve, reject) => {
-
-                const apiKey = 'AIzaSyDRVI_zAjaardkVaUlZDmHb6YY_fL_x_UU';
-                const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(this.searchQuery)}&key=${apiKey}`;
+                const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(this.searchQuery)}&key=${this.getApiKey()}`;
 
                 fetch(url)
                     .then(response => response.json())
@@ -66,7 +68,7 @@ export default {
 
                         if (data.status === 'OK' && data.results.length > 0) {
                             const location = data.results[0].geometry.location;
-                            const searchQuery = this.searchQuery;
+                            const name = this.searchQuery;
                             const address = data.results[0].formatted_address;
                             //console.log('location within data:', location);
                             this.addMarker(location.lat, location.lng);
@@ -117,7 +119,7 @@ export default {
         },
         loadMapScript() {
             const script = document.createElement('script');
-            script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDRVI_zAjaardkVaUlZDmHb6YY_fL_x_UU&callback=initMap`;
+            script.src = `https://maps.googleapis.com/maps/api/js?&key=${this.getApiKey()}&callback=initMap`;
             script.async = true;
             script.defer = true;
             window.initMap = this.initMap.bind(this);
@@ -130,8 +132,8 @@ export default {
         addPlace(marker, searchQuery, address) {
             const newPlace = {
                 id: this.generateUniqueId(),
-                name:this.searchQuery,
-                address:address,
+                name: searchQuery,
+                address: address,
                 coords: `${marker.position.lat()}, ${marker.position.lng()}`,
 
             };
@@ -139,11 +141,68 @@ export default {
             this.places.push(newPlace);
         },
 
+
         //helper function, generating unique id for places array
         generateUniqueId() {
             //random generating
             return Date.now() + Math.random().toString(36).substring(2, 9);
         },
+
+        //method created to load places array with test items, comment out later
+        loadTestItems() {
+            this.places = [
+                {
+                    id: -1,
+                    name: 'Some place 1',
+                    address: 'add for someplace 1',
+                    coords: '-1.5, 1.5',
+                },
+                {
+                    id: -2,
+                    name: 'Some place 2',
+                    address: 'add for someplace 2',
+                    coords: '-3.5, 3.5',
+                },
+                {
+                    id: -3,
+                    name: 'Some place 3',
+                    address: 'add for someplace 3',
+                    coords: '-132.5, 31.5',
+                },
+                {
+                    id: -4,
+                    name: 'MCGILL UNIVERSITY',
+                    address: '845 Rue Sherbrooke O, Montréal, QC H3A 0G4, Canada',
+                    coords: '45.50478469999999, -73.5771511',
+                },
+            ];
+        },
+
+        showAddress(lat, lng) {
+            const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${this.getApiKey()}`;
+            this.addMarker(lat, lng);
+
+            fetch(geocodeUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'OK' && data.results.length > 0) {
+                        const address = data.results[0].formatted_address;
+                        this.addPlace(this.markers[this.markers.length - 1], `Current Location - ${new Date().toLocaleString()}`, address);
+                    } else {
+                        console.error('Address not found');
+                    }
+
+                })
+                .catch(error => console.error('Error:', error));
+        },
+        //setting up api key from .env or via terminal cmd
+        getApiKey() {
+            if (!process.env.VUE_APP_API_KEY) {
+                console.error("API key is not set.");
+                return null; // Or handle the error as needed
+            }
+            return process.env.VUE_APP_API_KEY;
+        }
     },
     computed: {
         tableMarkers() {
@@ -176,6 +235,7 @@ export default {
             ],
             selected: [],
             places: [],
+
         };
     }
 }
