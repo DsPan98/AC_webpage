@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import { defineConfig, loadEnv } from 'vite';
-import vue2 from '@vitejs/plugin-vue2';
+import vue3 from '@vitejs/plugin-vue';
 import legacy from '@vitejs/plugin-legacy'
 
 export default ({ mode }) => {
@@ -13,7 +13,7 @@ export default ({ mode }) => {
     },
     base: VITE_BASE_URL,
     plugins: [
-      vue2(),
+      vue3(),
       legacy({
         targets: ['Chrome 64'],
         modernPolyfills: true

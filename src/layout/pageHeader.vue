@@ -17,8 +17,8 @@
         <!-- section4 table here, with all the searched places -->
         <div id="section4" style="width:90%; align-self:center; margin:auto; border:2px solid red;">Table here
             <button @click="deleteSelected">button for deletion</button>
-            <v-data-table :headers="headers" :items="places" :items-per-page="10" item-key="id" show-select
-                v-model="selected"></v-data-table>
+            <v-data-table :headers="headers" :items="places" :items-per-page="10" v-model="selected" item-key="id" show-select
+                ></v-data-table>
             <!-- <v-data-table :headers="headers" :items="tableMarkers" :items-per-page="10" show-select
                 v-model="selected"></v-data-table> -->
 
@@ -133,8 +133,10 @@ export default {
             document.head.appendChild(script);
         },
         deleteSelected() {
+            console.log
             this.places = this.places.filter(place => !this.selected.includes(place.id));
             this.selected = [];
+            console.log('deletion function triggered');
         },
         addPlace(marker, searchQuery, address) {
             const newPlace = {
@@ -304,7 +306,6 @@ export default {
 </script>
 <style>
 #fullPageHeader {
-    border: 2px solid red;
     width: 100vw;
     height: 1500px;
     display: flex;
@@ -326,5 +327,15 @@ export default {
     border: 1px solid black;
     padding: 8px;
     text-align: left;
+}
+
+.v-data-table .v-simple-checkbox {
+    height: 20px;
+    width: 20px;
+}
+
+.v-data-table .v-simple-checkbox .v-icon {
+    font-size: 18px;
+    color: blue; 
 }
 </style>

@@ -1,9 +1,10 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+//import Vue from 'vue';
+//import VueRouter from 'vue-router';
 import pageHeader from "@/layout/pageHeader.vue";
+import { createRouter, createWebHistory } from 'vue-router';
 
-
-Vue.use(VueRouter);
+//no longer required for routers in vue3
+//Vue.use(VueRouter);
 
 const routes = [
   {
@@ -17,8 +18,8 @@ const routes = [
   }
 ]
 
-const router = new VueRouter({
-  mode: 'history',
+const router = new createRouter({
+  history: createWebHistory(),
   base: import.meta.env.BASE_URL,
   routes,
   scrollBehavior() {
