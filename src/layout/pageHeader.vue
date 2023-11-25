@@ -15,10 +15,10 @@
             <div id="map" style="height:300px"></div>
         </div>
         <!-- section4 table here, with all the searched places -->
-        <div id="section4" style="width:90%; align-self:center; margin:auto; border:2px solid red;">Table here
+        <div id="section4" style="width:90%; align-self:center; margin:auto; border:2px solid red;">
             <button @click="deleteSelected">button for deletion</button>
-            <v-data-table :headers="headers" :items="places" :items-per-page="10" v-model="selected" item-key="id" show-select
-                ></v-data-table>
+            <v-data-table :headers="headers" :items="places" :items-per-page="10" v-model="selected" item-key="id"
+                show-select></v-data-table>
             <!-- <v-data-table :headers="headers" :items="tableMarkers" :items-per-page="10" show-select
                 v-model="selected"></v-data-table> -->
 
@@ -35,7 +35,7 @@
 export default {
     name: 'Homepage',
     mounted() {
-        this.loadMapScript();
+        //this.loadMapScript();
         this.loadTestItems();
         setInterval(this.updateLocalTime, 1000);
     },
@@ -336,6 +336,6 @@ export default {
 
 .v-data-table .v-simple-checkbox .v-icon {
     font-size: 18px;
-    color: blue; 
+    color: blue;
 }
 </style>
