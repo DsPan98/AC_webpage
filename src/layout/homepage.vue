@@ -1,44 +1,64 @@
 <template>
-    <div id="fullPageHeader">
-        <!-- section1, button here, click and ask for current location -->
-        <div id="section1">Button for location here
-            <button @click="getCurrentLocation">Get your current location</button>
-            <div v-if="currentLocation.length > 0">{{ currentLocation }}</div>
-        </div>
-        <!-- section2, search functions here -->
-        <div id=" section2">Search functions here
-            <input v-model="searchQuery" @keyup.enter="searchLocation">
-            <button @click="searchLocation">Search</button>
-        </div>
-        <!-- section3 map here, with location and marker of searced location -->
-        <div id="section3">Map here
-            <div id="map" style="height:300px"></div>
-        </div>
-        <!-- section4 table here, with all the searched places -->
-        <div id="section4" style="width:90%; align-self:center; margin:auto; border:2px solid red;">
-            <button @click="deleteSelected">button for deletion</button>
-            <v-data-table :headers="headers" :items="places" :items-per-page="10" v-model="selected" item-key="id"
-                show-select></v-data-table>
-            <!-- <v-data-table :headers="headers" :items="tableMarkers" :items-per-page="10" show-select
+    <v-app>
+        <!-- scroll-behavior="collapse" scroll-threshold="20" -->
+        <v-app-bar :elevation="0" color="info" class="vAppBar" :collapse="isCollapsed" :rounded="!isCollapsed"
+            @mouseenter="isCollapsed = false" @mouseleave="isCollapsed = true">
+            <template v-slot:prepend>
+                <v-app-bar-nav-icon></v-app-bar-nav-icon>
+            </template>
+
+            <v-app-bar-title>Map</v-app-bar-title>
+            <v-btn icon>
+                <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
+
+        </v-app-bar>
+        <div id="fullPageHeader">
+            <!-- section1, button here, click and ask for current location -->
+            <div id="section0">Map Application</div>
+            <div id="section1">
+                <v-btn @click="getCurrentLocation" prepend-icon="mdi-map-marker"
+                    style="display: flex; align-items: center;margin: auto;">
+                    Get Current Location
+                </v-btn>
+                <div v-if="currentLocation.length > 0">{{ currentLocation }}</div>
+            </div>
+            <!-- section2, search functions here -->
+            <div id=" section2">Search functions here
+                <input v-model="searchQuery" @keyup.enter="searchLocation">
+                <button @click="searchLocation">Search</button>
+            </div>
+            <!-- section3 map here, with location and marker of searced location -->
+            <div id="section3">Map here
+                <div id="map" style="height:300px"></div>
+            </div>
+            <!-- section4 table here, with all the searched places -->
+            <div id="section4" style="width:90%; align-self:center; margin:auto; border:2px solid red;">
+                <button @click="deleteSelected">button for deletion</button>
+                <v-data-table :headers="headers" :items="places" :items-per-page="10" v-model="selected" item-key="id"
+                    show-select></v-data-table>
+                <!-- <v-data-table :headers="headers" :items="tableMarkers" :items-per-page="10" show-select
                 v-model="selected"></v-data-table> -->
 
+            </div>
+            <!-- section5 time zone here -->
+            <div id="section5">
+                Timezone and local time here:
+                <div v-if="latestTimezone">Time Zone: {{ latestTimezone }}</div>
+                <div v-if="localTime">Local Time: {{ localTime }}</div>
+            </div>
         </div>
-        <!-- section5 time zone here -->
-        <div id="section5">
-            Timezone and local time here:
-            <div v-if="latestTimezone">Time Zone: {{ latestTimezone }}</div>
-            <div v-if="localTime">Local Time: {{ localTime }}</div>
-        </div>
-    </div>
+    </v-app>
 </template>
 <script>
 import { toRaw } from 'vue';
 export default {
     name: 'Homepage',
     mounted() {
-        this.loadMapScript();
-        //this.loadTestItems();
+        //this.loadMapScript();
+        this.loadTestItems();
         setInterval(this.updateLocalTime, 1000);
+        window.addEventListener('scroll', this.handleScroll);
     },
     methods: {
         getCurrentLocation() {
@@ -272,6 +292,13 @@ export default {
             this.localTime = localTime.toLocaleString();
             //console.log(this.localTime);
         },
+
+        handleScroll() {
+            if (window.scrollY > 150) {
+                this.isCollapsed = true;
+                window.removeEventListener('scroll', this.handleScroll);
+            }
+        }
     },
     computed: {
         tableMarkers() {
@@ -285,6 +312,8 @@ export default {
     },
     beforeDestroy() {
         clearInterval(this.timeInterval);
+        window.removeEventListener('scroll', this.handleScroll);
+
     },
 
 
@@ -311,6 +340,8 @@ export default {
             latestTimezone: '',
             timezoneOffset: 0,
             localTime: '',
+
+            isCollapsed: false,
         };
     }
 }
@@ -357,5 +388,13 @@ export default {
 .v-data-table .v-simple-checkbox .v-icon {
     font-size: 18px;
     color: blue;
+}
+
+#section0 {
+    height: 75px;
+    border: 2px solid red;
+    text-align: center;
+    font-family: 'AlibabaPuHuiTi-R';
+    font-size: 30px;
 }
 </style>

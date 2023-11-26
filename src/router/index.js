@@ -1,5 +1,6 @@
 //import Vue from 'vue';
 //import VueRouter from 'vue-router';
+import homepage from "@/layout/homepage.vue";
 import pageHeader from "@/layout/pageHeader.vue";
 import { createRouter, createWebHistory } from 'vue-router';
 
@@ -14,7 +15,8 @@ const routes = [
       auth: false,
       title: 'home'
     },
-    component: pageHeader,
+    //component: pageHeader,
+    component:homepage
   }
 ]
 
