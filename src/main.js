@@ -1,4 +1,4 @@
-import {createApp} from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
 import { createVuetify } from 'vuetify';
@@ -6,7 +6,7 @@ import { createVuetify } from 'vuetify';
 // import{ VAppBar } from 'vuetify/components/VAppBar';
 // import{ VApp } from 'vuetify/components/VApp';
 import '@mdi/font/css/materialdesignicons.min.css';
-import { VDataTable, VAppBar, VApp, VAppBarNavIcon, VAppBarTitle, VIcon, VBtn } from 'vuetify/components';
+import { VDataTable, VAppBar, VApp, VAppBarNavIcon, VAppBarTitle, VIcon, VBtn, VMenu, VList, VListItem, VListItemTitle, VTextField, VNavigationDrawer, VLayout, VMain } from 'vuetify/components';
 import 'vuetify/dist/vuetify.min.css';
 
 
@@ -15,10 +15,10 @@ import 'vuetify/dist/vuetify.min.css';
 //import '@/assets/main.css';
 
 
-import 'vuetify/dist/vuetify.min.css'; 
+import 'vuetify/dist/vuetify.min.css';
 const vuetify = createVuetify(
   {
-    components:{
+    components: {
       VDataTable,
       VAppBar,
       VApp,
@@ -26,6 +26,9 @@ const vuetify = createVuetify(
       VAppBarTitle,
       VIcon,
       VBtn,
+      VMenu, VList, VListItem,  VListItemTitle,
+      VTextField,
+      VNavigationDrawer, VLayout, VMain
     },
   }
 );
