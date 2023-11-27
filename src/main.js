@@ -6,7 +6,7 @@ import { createVuetify } from 'vuetify';
 // import{ VAppBar } from 'vuetify/components/VAppBar';
 // import{ VApp } from 'vuetify/components/VApp';
 import '@mdi/font/css/materialdesignicons.min.css';
-import { VDataTable, VAppBar, VApp, VAppBarNavIcon, VAppBarTitle, VIcon, VBtn, VMenu, VList, VListItem, VListItemTitle, VTextField, VNavigationDrawer, VLayout, VMain } from 'vuetify/components';
+import { VDataTable, VAppBar, VApp, VAppBarNavIcon, VAppBarTitle, VIcon, VBtn, VMenu, VList, VListItem, VListItemTitle, VTextField, VNavigationDrawer, VLayout, VMain, VCol, VRow } from 'vuetify/components';
 import 'vuetify/dist/vuetify.min.css';
 
 
@@ -28,7 +28,8 @@ const vuetify = createVuetify(
       VBtn,
       VMenu, VList, VListItem,  VListItemTitle,
       VTextField,
-      VNavigationDrawer, VLayout, VMain
+      VNavigationDrawer, VLayout, VMain,
+      VRow, VCol,
     },
   }
 );

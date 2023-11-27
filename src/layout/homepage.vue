@@ -31,21 +31,46 @@
             <v-main class="fullPageHeader d-flex align-center flex-column justify-center" style="min-height: 300px;">
                 <div id="section0"> Application</div>
                 <!-- section1, button here, click and ask for current location -->
-                <div id="section1">
-                    <v-btn @click="getCurrentLocation" prepend-icon="mdi-map-marker"
-                        style="display: flex; align-items: center;margin: auto;">
-                        Get Current Location
-                    </v-btn>
-                    <div v-if="currentLocation.length > 0">{{ currentLocation }}</div>
-                </div>
-                <!-- section2, search functions here -->
-                <div id=" section2">
-                    <!-- <input v-model="searchQuery" @keyup.enter="searchLocation"> -->
-                    <v-text-field v-model="searchQuery" label="Search" :rules="[rules.required]" clearable
-                        hint="Enter the name of a location" placeholder="Type in a location"
-                        @keyup.enter="searchLocation"></v-text-field>
-                    <v-btn @click="searchLocation">Search</v-btn>
-                </div>
+                <v-row>
+  <!-- Left Column -->
+  <v-col cols="6">
+    <!-- Top Left: Get Current Location Button -->
+    <div id="section1">
+      <v-btn @click="getCurrentLocation" prepend-icon="mdi-map-marker">
+        Get Current Location
+      </v-btn>
+      <div v-if="currentLocation.length > 0">{{ currentLocation }}</div>
+    </div>
+
+<!-- Bottom Left: Search Bar and Button -->
+<div id="section2">
+  <v-row align="center" no-gutters>
+    <v-col cols="10">
+      <v-text-field v-model="searchQuery" label="Search" :rules="[rules.required]" clearable
+                    hint="Enter the name of a location" placeholder="Type in a location"
+                    @keyup.enter="searchLocation"></v-text-field>
+    </v-col>
+    <v-col cols="2">
+      <v-btn @click="searchLocation">Search</v-btn>
+    </v-col>
+  </v-row>
+</div>
+  </v-col>
+
+  <!-- Right Column -->
+  <v-col cols="6">
+    <!-- Top Right: Time Zone -->
+    <div>
+      <div v-if="latestTimezone">Time Zone: {{ latestTimezone }}</div>
+    </div>
+
+    <!-- Bottom Right: Local Time -->
+    <div>
+      <div v-if="localTime">Local Time: {{ localTime }}</div>
+    </div>
+  </v-col>
+</v-row>
+
                 <!-- section3 map here, with location and marker of searced location -->
                 <div id="section3" style="width:90%;;">
                     <div id="map" style="width:90%; margin:auto; height:300px"></div>
@@ -60,11 +85,11 @@
 
                 </div>
                 <!-- section5 time zone here -->
-                <div id="section5">
+                <!-- <div id="section5">
                     Timezone and local time here:
                     <div v-if="latestTimezone">Time Zone: {{ latestTimezone }}</div>
                     <div v-if="localTime">Local Time: {{ localTime }}</div>
-                </div>
+                </div> -->
             </v-main>
         </v-layout>
     </v-app>
@@ -422,5 +447,9 @@ export default {
     text-align: center;
     font-family: 'AlibabaPuHuiTi-R';
     font-size: 30px;
+}
+
+body {
+    background: linear-gradient(to right, #ff6e7f, #bfe9ff);
 }
 </style>
