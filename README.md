@@ -23,14 +23,14 @@ Webpage Application with map and table
     ```bash
     npm install
     ```
-    This would take a while
+    This process may take a while
 4. **Set Up Google Maps API Key:** You need to set your Google Maps API key. There are two ways to do this:
 
     a) **Environment Variable (Recommended for Development):**
        ```bash
        $env:VUE_APP_API_KEY='MY_API_KEY'; npm run dev
        ```
-       Replace `MY_API_KEY` with your actual API key.
+       Replace `MY_API_KEY` with the API key.
 
     b) **.env File:**
        Locate the `.env` file in your project directory and modify the line:
@@ -45,11 +45,11 @@ Webpage Application with map and table
        ```bash
        npm run dev
        ```
-        Because this is a public project, I dont feel comfortable leaving my api keys laying around. For my own development environment I added the key within .env file, but I left it out when I pushed the project into git. 
+        Because this is a public project, I don't feel comfortable leaving my API keys laying around. For my own development environment I added the key within .env file but left it out when I pushed the project to git. 
 
 ### Running Tests
 
-I also added some jest testing set up, run tests using the command:
+I also added some jest testing setup, run tests using the command:
 ```bash
 npm test
 ```
