@@ -45,7 +45,7 @@ Webpage Application with map and table
        ```bash
        npm run dev
        ```
-        Because this is a public project, I dont feel comfortable leaving my api key around.
+        Because this is a public project, I dont feel comfortable leaving my api keys laying around. For my own development environment I added the key within .env file, but I left it out when I pushed the project into git. 
 
 ### Running Tests
 
