@@ -56,3 +56,8 @@ I also added some jest testing setup, run tests using the command:
 ```bash
 npm test
 ```
+
+### Images
+The webpage should look something like this:
+![Image1](/public/image/MapAndTable.png)
+![Image2](/public/image/timezoneAndSearch.png)
