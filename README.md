@@ -27,25 +27,28 @@ Webpage Application with map and table
 4. **Set Up Google Maps API Key:** You need to set your Google Maps API key. There are two ways to do this:
 
     a) **Environment Variable (Recommended for Development):**
-       ```bash
+   
+       ```
        $env:VUE_APP_API_KEY='MY_API_KEY'; npm run dev
        ```
        Replace `MY_API_KEY` with the API key.
 
     b) **.env File:**
-       Locate the `.env` file in your project directory and modify the line:
-       ```
+       Locate the `.env` file in your project directory (or create one in the project root folder) and modify the line:
+   
+        ```
        VUE_APP_API_KEY=''
        ```
        to
-       ```
+   
+        ```
        VUE_APP_API_KEY='MY_API_KEY'
        ```
        After modifying the `.env` file, start the development server with:
        ```bash
        npm run dev
        ```
-        Because this is a public project, I don't feel comfortable leaving my API keys laying around. For my own development environment I added the key within .env file but left it out when I pushed the project to git. 
+##Because this is a public project, I don't feel comfortable leaving my API keys laying around. For my own development environment I added the key within .env file but left it out when I pushed the project to git.##
 
 ### Running Tests
 
