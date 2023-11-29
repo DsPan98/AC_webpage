@@ -444,9 +444,9 @@ export default {
 
             drawer: false,
             navigationItems: [
-                { title: 'Home' },
-                { title: 'Profile' },
-                { title: 'Settings' },
+                { title: 'Home (for future development)' },
+                { title: 'Profile (for future development)' },
+                { title: 'Settings (for future development)' },
             ],
         };
     }
