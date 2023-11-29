@@ -6,78 +6,97 @@
         vappbar placed on top, with a hidden nav menu and a setting menu
         collasped and rounded when mouse enter and leave
         structure: nav icon   title   dot vertical icon    -->
-            <v-app-bar :elevation="0" style="background: linear-gradient(to right, #ff6e7f, #bfe9ff);" class="vAppBar"
-                :collapse="isCollapsed" :rounded="!isCollapsed" @mouseenter="isCollapsed = false"
-                @mouseleave="isCollapsed = true">
+            <v-app-bar :elevation="2" style="background: linear-gradient(to right, #BDC3C7, #2C3E50)" class="vAppBar"
+                :collapse="isCollapsed && !drawer" :rounded="!isCollapsed || drawer" @mouseenter="handleMouseEnter"
+                @mouseleave="handleMouseLeave">
                 <template v-slot:prepend>
-                    <v-app-bar-nav-icon></v-app-bar-nav-icon>
+                    <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
                 </template>
                 <v-app-bar-title>Map</v-app-bar-title>
-                <!-- <v-btn icon>
-                <v-icon>mdi-dots-vertical</v-icon>  
-            </v-btn> -->
-                <v-menu offset-y>
-                    <template v-slot:activator="{ attrs }">
-                        <v-btn icon="mdi-dots-vertical" v-bind="attrs"></v-btn>
-                    </template>
+                <v-btn icon>
+                    <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
 
-                    <v-list>
-                        <v-list-item v-for="(item, i) in items" :key="i">
-                            <v-list-item-title>{{ item.title }}</v-list-item-title>
-                        </v-list-item>
-                    </v-list>
-                </v-menu>
+
             </v-app-bar>
+            <v-navigation-drawer v-model="drawer" temporary>
+                <v-list dense>
+                    <v-list-item v-for="(item, i) in navigationItems" :key="i" @click="handleNavigation(item)">
+
+                        <v-list-item-title>{{ item.title }}</v-list-item-title>
+
+                    </v-list-item>
+                </v-list>
+            </v-navigation-drawer>
+
+
             <v-main class="fullPageHeader d-flex align-center flex-column justify-center" style="min-height: 300px;">
                 <div id="section0"> Application</div>
                 <!-- section1, button here, click and ask for current location -->
-                <v-row>
-  <!-- Left Column -->
-  <v-col cols="6">
-    <!-- Top Left: Get Current Location Button -->
-    <div id="section1">
-      <v-btn @click="getCurrentLocation" prepend-icon="mdi-map-marker">
-        Get Current Location
-      </v-btn>
-      <div v-if="currentLocation.length > 0">{{ currentLocation }}</div>
-    </div>
 
-<!-- Bottom Left: Search Bar and Button -->
-<div id="section2">
-  <v-row align="center" no-gutters>
-    <v-col cols="10">
-      <v-text-field v-model="searchQuery" label="Search" :rules="[rules.required]" clearable
-                    hint="Enter the name of a location" placeholder="Type in a location"
-                    @keyup.enter="searchLocation"></v-text-field>
-    </v-col>
-    <v-col cols="2">
-      <v-btn @click="searchLocation">Search</v-btn>
-    </v-col>
-  </v-row>
-</div>
-  </v-col>
+                <v-row class="info-container">
+                    <!-- Left Column -->
+                    <v-col cols="6" sm="8" xs="10"
+                        style=" display: flex; flex-direction: column; justify-content: space-around; height: 100%;">
+                        <!-- Top Left: Get Current Location Button -->
+                        <div id="section1">
+                            <v-btn @click="getCurrentLocation" :disabled="isLocationLoading" prepend-icon="mdi-map-marker"
+                                :elevation="2"
+                                style="margin-bottom: 10px; overflow: hidden; background-color: rgba(255, 255, 255, 0.5) !important; ">
+                                <span v-if="isLocationLoading">Loading...</span>
+                                <span v-else>Get Current Location</span>
+                            </v-btn>
+                        </div>
 
-  <!-- Right Column -->
-  <v-col cols="6">
-    <!-- Top Right: Time Zone -->
-    <div>
-      <div v-if="latestTimezone">Time Zone: {{ latestTimezone }}</div>
-    </div>
+                        <!-- Bottom Left: Search Bar and Button -->
+                        <!-- :prepend-icon="isSearchLoading ? 'mdi-loading' : 'mdi-magnify'" -->
+                        <div id="section2">
+                            <v-text-field v-model="searchQuery"
+                                :prepend-icon="isSearchLoading ? 'mdi-loading' : 'mdi-magnify'"
+                                :label="isSearchLoading ? 'Loading...' : 'Search'" :rules="[rules.required]" clearable
+                                hint="Enter location" placeholder="Type in a location" @keyup.enter="searchLocation"
+                                class="search-field"></v-text-field>
 
-    <!-- Bottom Right: Local Time -->
-    <div>
-      <div v-if="localTime">Local Time: {{ localTime }}</div>
-    </div>
-  </v-col>
-</v-row>
+                            <v-btn @click="searchLocation"
+                                style="background-color: rgba(255, 255, 255, 0.5) !important; ">Search</v-btn>
+                        </div>
+                    </v-col>
+
+                    <!-- Right Column -->
+                    <v-col cols="6" sm="4" xs="10"
+                        style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+                        <!-- Top Right: Time Zone -->
+                        <div>
+                            <div v-if="latestTimezone">Time Zone: {{ latestTimezone }}</div>
+                        </div>
+
+                        <!-- Bottom Right: Local Time -->
+                        <div>
+                            <div v-if="localTime">Local Time: {{ localTime }}</div>
+                        </div>
+                        <div>
+                            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                v-if="currentLocation.length > 0">{{ currentLocation }}
+                            </div>
+                        </div>
+                    </v-col>
+                </v-row>
 
                 <!-- section3 map here, with location and marker of searced location -->
-                <div id="section3" style="width:90%;;">
-                    <div id="map" style="width:90%; margin:auto; height:300px"></div>
+                <div id="section3" style="width:90%; margin:auto; margin-top: 50px">
+                    <div class="map-container">
+                        <div id="map" style="width:100%; height:300px;">
+                            <div v-if="!mapLoaded" class="map-placeholder">Loading map...</div>
+                        </div>
+                    </div>
                 </div>
+
                 <!-- section4 table here, with all the searched places -->
-                <div id="section4" style="width:90%; align-self:center; margin:auto; border:2px solid red;">
-                    <button @click="deleteSelected">button for deletion</button>
+                <div id="section4" style="width:90%; align-self:center; margin:auto; margin-bottom: 10px;">
+                    <v-btn :elevation="10" @click="deleteSelected" prepend-icon="mdi-delete"
+                        style="background-color: rgba(255, 255, 255, 0.5) !important; margin:10px">
+                        Delete selected
+                    </v-btn>
                     <v-data-table :headers="headers" :items="places" :items-per-page="10" v-model="selected" item-key="id"
                         show-select></v-data-table>
                     <!-- <v-data-table :headers="headers" :items="tableMarkers" :items-per-page="10" show-select
@@ -106,23 +125,27 @@ export default {
     },
     methods: {
         getCurrentLocation() {
+            this.isLocationLoading = true;
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(this.showPosition, this.showError);
             }
             else {
                 alert("Geolocation not supported by the browser");
+                this.isLocationLoading = false;
             }
         },
         showPosition(position) {
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
             alert("Latitude: " + lat + "\nLongitude: " + lng);
-            // this.currentLocation = [position.coords.latitude, position.coords.longitude];
+            this.currentLocation = [position.coords.latitude, position.coords.longitude];
             // this.addMarker(position.coords.latitude, position.coords.longitude);
             // this.addPlace(this.markers[this.markers.length - 1], 'Current Location', 'test address');
             this.showCurrentAddress(lat, lng);
+            this.isLocationLoading = false;
         },
         showError(error) {
+            this.isLocationLoading = false;
             console.log(error);
 
         },
@@ -130,6 +153,7 @@ export default {
         searchLocation() {
             return new Promise((resolve, reject) => {
                 const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(this.searchQuery)}&key=${this.getApiKey()}`;
+                this.isSearchLoading = true;
 
                 fetch(url)
                     .then(response => response.json())
@@ -146,16 +170,20 @@ export default {
                             this.addPlace(this.markers[this.markers.length - 1], name, address);
                             this.map.setCenter(location);
                             this.getTimeZone(location.lat, location.lng);
+                            this.isSearchLoading = false;
+
                             resolve();
                             //console.log('the markers array size after push is within fetch:', this.markers.length)
 
                         } else {
+                            this.isSearchLoading = false;
                             console.error('No results found');
                             reject(new Error('No results found'));
                             alert('We could not find the location you typed in.');
                         }
                     })
                     .catch(error => {
+                        this.isSearchLoading = false;
                         console.error('Error:', error);
                         reject(error);
                     });
@@ -169,6 +197,9 @@ export default {
             });
             // Store map instance in Vue data for later use
             this.map = map;
+            this.map.addListener('tilesloaded', () => {
+                this.mapLoaded = true;
+            });
         },
         addMarker(lat, lng) {
             console.log(`Adding marker at lat: ${lat}, lng: ${lng}`); // Debug output
@@ -342,7 +373,23 @@ export default {
                 this.isCollapsed = true;
                 window.removeEventListener('scroll', this.handleScroll);
             }
-        }
+        },
+        handleNavigation(item) {
+            // Handle navigation item click
+            console.log('Navigating to:', item.title);
+        },
+        //function for appbar collapse
+        handleMouseEnter() {
+            if (!this.drawer) {
+                this.isCollapsed = false;
+            }
+        },
+
+        handleMouseLeave() {
+            if (!this.drawer) {
+                this.isCollapsed = true;
+            }
+        },
     },
     computed: {
         tableMarkers() {
@@ -357,7 +404,6 @@ export default {
     beforeDestroy() {
         clearInterval(this.timeInterval);
         window.removeEventListener('scroll', this.handleScroll);
-
     },
 
 
@@ -365,6 +411,7 @@ export default {
         return {
             currentLocation: [],
             map: null,
+            mapLoaded: false,
             markers: [],
             searchQuery: '',
 
@@ -387,69 +434,177 @@ export default {
 
             isCollapsed: false,
 
-            items: [
-                { title: 'Option 1' },
-                { title: 'Option 2' },
-                { title: 'Option 3' },
-            ],
+
 
             rules: {
                 required: value => !!value || 'Field is required',
             },
+            isLocationLoading: false,
+            isSearchLoading: false,
+
+            drawer: false,
+            navigationItems: [
+                { title: 'Home' },
+                { title: 'Profile' },
+                { title: 'Settings' },
+            ],
         };
     }
 }
 
 </script>
 <style>
-#fullPageHeader {
-    width: 100vw;
-    height: 1500px;
-    display: flex;
-    flex-grow: 1;
-    flex-direction: column;
-    justify-content: flex-start;
-    margin: auto;
-}
-
 .v-data-table-header {
-    font-family: 'YourFontFamily', sans-serif;
+    font-family: 'AlibabaPuHuiTiH';
     font-size: 16px;
     color: #333333;
 }
 
-.v-data-table {
-    border-collapse: separate;
-    border-spacing: 0;
-    width: 100%;
-}
-
-.v-data-table th,
-.v-data-table td {
-    border: 1px solid black;
-    padding: 8px;
-    text-align: left;
-}
-
-.v-data-table .v-simple-checkbox {
-    height: 20px;
-    width: 20px;
-}
-
-.v-data-table .v-simple-checkbox .v-icon {
-    font-size: 18px;
-    color: blue;
-}
-
 #section0 {
     height: 75px;
-    border: 2px solid red;
+
+
     text-align: center;
     font-family: 'AlibabaPuHuiTi-R';
     font-size: 30px;
 }
 
-body {
-    background: linear-gradient(to right, #ff6e7f, #bfe9ff);
+.v-application {
+    /* background: linear-gradient(to right, #ff6e7f, #bfe9ff) !important; */
+    /* background: linear-gradient(to right, #6a11cb, #2575fc) !important; */
+    /* background: linear-gradient(to right, #fad0c4, #ffd1ff) !important; */
+    /* background: linear-gradient(to right, #00c6ff, #0072ff) !important; */
+    background: linear-gradient(to right, #BDC3C7, #2C3E50) !important;
+}
+
+
+.v-data-table {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+    /* Light background with some opacity */
+    color: #000000 !important;
+    /* Black text for contrast */
+}
+
+.map-placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    /* Same as your map height */
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 20px;
+}
+
+
+.info-container {
+    border: 5px solid #333;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    width: 95%;
+}
+
+.map-container {
+    border: 10px solid #333;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+/*adding a little tv affect in */
+.map-container::before {
+    content: '';
+    display: block;
+    position: absolute;
+}
+
+
+/*the current design works best between 700px to 1400px;
+scale the size for screen size larger than 1400 and smaller than 700 (width)
+*/
+.search-field {
+    min-width: 100px;
+}
+
+#section2 {
+    display: flex;
+    justify-content: flex-start;
+    /* Aligns items to the left */
+    align-items: center;
+    gap: 2px;
+}
+
+@media (max-width: 700px) {
+    .fullPageHeader {
+        font-size: 12px;
+
+        .v-btn {
+            font-size: 7px;
+            min-width: 50px;
+            line-height: normal;
+            white-space: normal;
+
+        }
+
+        .v-data-table {
+            font-size: 12px;
+        }
+
+    }
+
+    .v-text-field input {
+        font-size: 12px !important;
+        line-height: normal;
+
+        /* Adjust the font size for smaller screens */
+    }
+
+    .search-field {
+        width: 150px;
+        line-height: normal;
+
+        .v-label,
+        .v-messages {
+            font-size: 8px;
+            line-height: normal;
+
+        }
+
+    }
+}
+
+@media (min-width: 1400px) {
+    .fullPageHeader {
+        font-size: 30px !important;
+
+        .v-btn {
+            font-size: 25px !important;
+            min-width: 125px;
+
+        }
+
+        .v-data-table {
+            font-size: 30px;
+        }
+    }
+
+    .v-text-field input {
+        font-size: 30px !important;
+        line-height: normal;
+    }
+
+    .search-field {
+        width: 400px;
+
+
+        .v-label,
+        .v-messages {
+            font-size: 30px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+
+    }
 }
 </style>
