@@ -1,0 +1,18 @@
+
+@font-face {
+  font-family: "AlibabaPuHuiTiB";
+  src: url("/src/assets/font/AlibabaPuHuiTi-2-85-Bold.otf") format("opentype");
+}
+@font-face {
+  font-family: "AlibabaPuHuiTiR";
+  src: url("/src/assets/font/AlibabaPuHuiTi-2-55-Regular.otf") format("opentype");
+}
+@font-face {
+  font-family: "AlibabaPuHuiTiH";
+  src: url("/src/assets/font/AlibabaPuHuiTi-2-105-Heavy.otf") format("opentype");
+}
+
+@font-face{
+  font-family:"italicFont";
+  src:url("/src/assets/font/AlibabaSans-Italic.otf") format("opentype");
+};

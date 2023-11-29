@@ -1,0 +1,63 @@
+@import './base.css';
+@import './font.css';
+
+#app {
+  margin: 0 auto;
+  font-weight: normal;
+  /* max-width: 1280px; */
+  /* padding: 2rem; */
+  /* position: absolute;
+  left: 0px;
+  top: 0px; */
+    
+  
+  background: linear-gradient(to right, #ff6e7f, #bfe9ff);
+
+
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: hsl(160deg 100% 37% / 100%);
+  transition: 0.4s;
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: hsl(160deg 100% 37% / 20%);
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+    display: flex;
+    place-items: center;
+  }
+
+  #app {
+    /* display: grid;
+    grid-template-columns: 1fr 1fr; */
+    /* padding: 0 2rem; */
+  }
+}
+
+@font-face {
+  font-family: 'MyWebFont';
+  src: url('webfont.eot'); /* IE9 Compat Modes */
+  src: url('webfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('webfont.woff2') format('woff2'), /* Super Modern Browsers */
+       url('webfont.woff') format('woff'), /* Pretty Modern Browsers */
+       url('webfont.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('webfont.svg#svgFontName') format('svg'); /* Legacy iOS */
+}
+
+@font-face {
+  font-family: 'SiyuanBold';
+  src: url(./font/SourceHanSerifSC-Bold.otf) format('opentype');
+}
+@font-face {
+  font-family: 'SiyuanRegular';
+  src: url(./font/SourceHanSerifSC-Regular.otf) format('opentype');
+}
+
